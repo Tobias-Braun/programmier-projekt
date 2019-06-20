@@ -88,9 +88,6 @@ public class Logger {
 
     private static String format(Object o) {
         StringHelper s = StringHelper.of(String.valueOf(o));
-        for (Formatters formatter : Formatters.values()) {
-            if (s.toString().matches(formatter.formatMatch)) return formatter.formatFunction.apply(s).toString();
-        }
         return s.toString();
     }
 }

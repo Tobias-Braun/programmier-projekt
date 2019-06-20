@@ -3,16 +3,25 @@ package de.unidue.iem.tdr.nis.client.tasks;
 import de.unidue.iem.tdr.nis.client.TaskObject;
 import de.unidue.iem.tdr.nis.client.util.Aes;
 import de.unidue.iem.tdr.nis.client.util.StringHelper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static de.unidue.iem.tdr.nis.client.util.Aes.parseHexStringToBytes;
 import static de.unidue.iem.tdr.nis.client.util.Aes.stdRound;
 import static de.unidue.iem.tdr.nis.client.util.MathUtils.byteArrayToHexString;
 import static de.unidue.iem.tdr.nis.client.util.MathUtils.transform;
 import static de.unidue.iem.tdr.nis.client.util.MathUtils.xorBytes;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class _14_AES_Initiale_und_zwei_weitere_Runden implements TaskSolver {
-    @Override
-    public String solve(TaskObject task) {
+class _14_AES_Initiale_und_zwei_weitere_RundenTest {
+
+    @Test
+    void solve() {
+        TaskObject task = new TaskObject();
+        task.setStringArray(new String[]{"8eac3d33c3bebc832228e55d5d988d64", "63d272d563c88719290287c3a59c493c", "176"});
+        String expected = "ed7e4fe6a0763b9a0b2a629ef804c458_9e43056aa2baaa0f91d880693635a0f1_cb8c894" +
+                "35c79973f3ae6d374bd031498";
+
         String input_str = task.getStringArray(0);
         String key_str = task.getStringArray(1);
 
@@ -33,6 +42,6 @@ public class _14_AES_Initiale_und_zwei_weitere_Runden implements TaskSolver {
         helper.append("_");
         helper.append(transform(byteArrayToHexString(res_r_3)));
         String result = helper.toString();
-        return result;
+        Assertions.assertEquals(expected, result);
     }
 }

@@ -3,13 +3,23 @@ package de.unidue.iem.tdr.nis.client.tasks;
 import de.unidue.iem.tdr.nis.client.TaskObject;
 import de.unidue.iem.tdr.nis.client.util.RC4;
 import de.unidue.iem.tdr.nis.client.util.StringHelper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static de.unidue.iem.tdr.nis.client.util.MathUtils.decToHex;
 import static de.unidue.iem.tdr.nis.client.util.MathUtils.hexToBin;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class _17_RC4_Verschluesselung implements TaskSolver {
-    @Override
-    public String solve(TaskObject task) {
+class _17_RC4_VerschluesselungTest {
+
+    @Test
+    void solve() {
+        TaskObject task = new TaskObject();
+        task.setStringArray(new String[]{"7_11_13_14_20_22_4_1_15_1_24_2_20_23_13_2_13_20_4_21_23_3_9_7",
+                "encryption"});
+        String expected = "01100110011000100111000001100100011110110111101001111000011001110110110" +
+                "001100100";
+
         String[] key_str = task.getStringArray(0).split("_");
         int[] key = new int[key_str.length];
         for (int i = 0; i < key.length; i++) {
@@ -29,6 +39,7 @@ public class _17_RC4_Verschluesselung implements TaskSolver {
             res_helper.append(hex);
         }
         String result = res_helper.toString();
-        return result;
+
+        Assertions.assertEquals(expected, result);
     }
 }

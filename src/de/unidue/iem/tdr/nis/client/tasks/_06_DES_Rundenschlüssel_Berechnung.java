@@ -10,10 +10,10 @@ public class _06_DES_Rundenschlüssel_Berechnung implements TaskSolver {
     public String solve(TaskObject task) {
         Logger.logEnter("06.solve", task.getStringArray(0));
         String key = task.getStringArray(0);
+        key = DesEncryption.pc_1(key);
         String c = key.substring(0, 28);
         String d = key.substring(28, 56);
         String roundKey = "";
-        DesEncryption.pc_1(key);
         for (int i = 1; i <= task.getIntArray(0); i++) {
             System.out.println(i);
             c = DesEncryption.leftShift(c);

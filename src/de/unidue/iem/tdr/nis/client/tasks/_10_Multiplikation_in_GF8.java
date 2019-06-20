@@ -2,15 +2,17 @@ package de.unidue.iem.tdr.nis.client.tasks;
 
 import de.unidue.iem.tdr.nis.client.TaskObject;
 import de.unidue.iem.tdr.nis.client.util.GF8;
-import de.unidue.iem.tdr.nis.client.util.Logger;
-import de.unidue.iem.tdr.nis.client.util.MathUtils;
 import de.unidue.iem.tdr.nis.client.util.StringHelper;
+
+import static de.unidue.iem.tdr.nis.client.util.MathUtils.decToHex;
+import static de.unidue.iem.tdr.nis.client.util.MathUtils.hexToDec;
 
 public class _10_Multiplikation_in_GF8 implements TaskSolver {
     @Override
     public String solve(TaskObject task) {
-        int first = Integer.parseInt(task.getStringArray(0));
-        int sec = Integer.parseInt(task.getStringArray(1));
-        return MathUtils.binToHex(StringHelper.of(String.valueOf(GF8.multiply(first, sec)))).toString();
+        int first = hexToDec(task.getStringArray(0));
+        int sec = hexToDec(task.getStringArray(1));
+        StringHelper hexVal = decToHex(GF8.gf8_mult(first, sec));
+        return hexVal.length() == 1 ? "0" + hexVal : hexVal.toString();
     }
 }

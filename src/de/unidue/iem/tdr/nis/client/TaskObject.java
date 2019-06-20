@@ -39,7 +39,7 @@ public class TaskObject {
         return this.type;
     }
 
-    void setStringArray(String[] sa) {
+    public void setStringArray(String[] sa) {
         this.sa = sa;
     }
 
@@ -85,7 +85,7 @@ public class TaskObject {
         return sa;
     }
 
-    protected void setIntArray(int[] ia) {
+    public void setIntArray(int[] ia) {
         this.ia = ia;
     }
 
@@ -127,7 +127,7 @@ public class TaskObject {
         return ia;
     }
 
-    protected void setDoubleArray(double[] da) {
+    public void setDoubleArray(double[] da) {
         this.da = da;
     }
 

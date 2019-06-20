@@ -11,8 +11,18 @@ import de.unidue.iem.tdr.nis.client.tasks._07_DES_RBlock_Berechnung;
 import de.unidue.iem.tdr.nis.client.tasks._08_DES_Feistel_Funktion;
 import de.unidue.iem.tdr.nis.client.tasks._09_DES_Berechnung_einer_Runde;
 import de.unidue.iem.tdr.nis.client.tasks._10_Multiplikation_in_GF8;
+import de.unidue.iem.tdr.nis.client.tasks._11_AES_Schluesselgenerierung;
+import de.unidue.iem.tdr.nis.client.tasks._12_AES_MixColumns;
+import de.unidue.iem.tdr.nis.client.tasks._13_AES_ShiftRows_Subbytes_MixColumns;
+import de.unidue.iem.tdr.nis.client.tasks._14_AES_Initiale_und_zwei_weitere_Runden;
+import de.unidue.iem.tdr.nis.client.tasks._15_RC4_Generation_Loop;
+import de.unidue.iem.tdr.nis.client.tasks._16_RC4_Keyscheduling;
+import de.unidue.iem.tdr.nis.client.tasks._17_RC4_Verschluesselung;
+import de.unidue.iem.tdr.nis.client.tasks._18_Diffie_Hellmann;
+import de.unidue.iem.tdr.nis.client.tasks._19_RSA_Verschlüsselung;
 import de.unidue.iem.tdr.nis.client.util.Logger;
 
+import static de.unidue.iem.tdr.nis.client.tasks._20_RSA_Verschlüsselung.gen_key_pair;
 import static de.unidue.iem.tdr.nis.client.util.Logger.logWrong;
 
 /**
@@ -66,7 +76,16 @@ public class Client implements TaskDefs {
                 new _07_DES_RBlock_Berechnung(),
                 new _08_DES_Feistel_Funktion(),
                 new _09_DES_Berechnung_einer_Runde(),
-                new _10_Multiplikation_in_GF8()
+                new _10_Multiplikation_in_GF8(),
+                new _11_AES_Schluesselgenerierung(),
+                new _12_AES_MixColumns(),
+                new _13_AES_ShiftRows_Subbytes_MixColumns(),
+                new _14_AES_Initiale_und_zwei_weitere_Runden(),
+                new _15_RC4_Generation_Loop(),
+                new _16_RC4_Keyscheduling(),
+                new _17_RC4_Verschluesselung(),
+                new _18_Diffie_Hellmann(),
+                new _19_RSA_Verschlüsselung()
         };
         con = new Connection();
         if (con.auth(token))
@@ -87,7 +106,13 @@ public class Client implements TaskDefs {
             }
             Logger.logTask(task, taskNames[task -1], 37, "BEGIN");
             System.out.println();
-            currentTask = con.getTask(task);
+            if (task == 20) {
+                currentTask = con.getTask(task, gen_key_pair());
+            } else
+                currentTask = con.getTask(task);
+            if (task == 18) {
+                con.sendMoreParams(currentTask, _18_Diffie_Hellmann.getMoreParams(currentTask));
+            }
             final String solution = solver[task - 1].solve(currentTask); // 0 to 1 offset due to exercises starting at 1
             System.out.println();
             if (con.sendSolution(solution)) {

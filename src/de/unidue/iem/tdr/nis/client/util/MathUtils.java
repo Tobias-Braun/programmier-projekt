@@ -28,15 +28,19 @@ public class MathUtils {
         return a;
     }
 
-    public static String xor(StringHelper a, StringHelper b) {
-        Logger.logEnter("MathUtils.xor", a, b);
-        hexToBin(a);
-        hexToBin(b);
+    public static String binaryXor(StringHelper a, StringHelper b) {
+        Logger.logEnter("MathUtils.hexXor", a, b);
         final StringHelper result = new StringHelper();
         prependZerosIfStringsUnEqualInSize(a, b);
         xorEqualLengthBinaryStrings(a, b, result);
-        Logger.logExit("MathUtils.xor", a, b, result);
+        Logger.logExit("MathUtils.hexXor", a, b, result);
         return result.toString();
+    }
+
+    public static String hexXor(StringHelper a, StringHelper b) {
+        hexToBin(a);
+        hexToBin(b);
+        return binaryXor(a, b);
     }
 
     private static void xorEqualLengthBinaryStrings(StringHelper a, StringHelper b, StringHelper result) {
@@ -69,6 +73,7 @@ public class MathUtils {
 
     public static StringHelper binToHex(StringHelper bin) {
         Logger.logEnter("MathUtils.binToHex",bin);
+
         bin.repeatForBlockSize(4, MathUtils::convertBinBlockToHex);
         Logger.logExit("MathUtils.binToHex", bin);
         return bin;
@@ -96,7 +101,66 @@ public class MathUtils {
         }
     }
 
-    public static void hexToBin(StringHelper hex) {
+    public static int binToDec(String bin) {
+        int value = 0;
+        for (int i = bin.length() - 1; i >= 0; i--) {
+            value += bin.charAt(i) == '1' ? Math.pow(2, (bin.length() - 1 - i)) : 0;
+        }
+        return value;
+    }
+
+    public static int hexToDec(String hex) {
+        StringHelper h = StringHelper.of(hex);
+        hexToBin(h);
+        return binToDec(h.toString());
+    }
+
+    public static StringHelper decToHex(int dec) {
+        Logger.logEnter("MathUtils.decToHex", dec);
+        StringHelper bin = StringHelper.of(dectoBin("" + dec));
+        while (bin.length() % 4 != 0) {
+            bin.insert(0, "0");
+        }
+        var res = binToHex(bin);
+        if (res.length() == 1) res.insert(0, "0");
+        Logger.logExit("MathUtils.decToHex", dec, res);
+        return res;
+    }
+
+    public static String byteArrayToHexString(int[] input) {
+        final StringHelper hex_str = StringHelper.empty();
+        for (int byte_ : input) {
+            hex_str.append(decToHex(byte_));
+        }
+        return hex_str.toString();
+    }
+
+    public static String dectoBin(String dec) {
+        int dec_int = Integer.parseInt(dec);
+        StringHelper value = StringHelper.empty();
+        while (dec_int != 0) {
+            value.insert(0, dec_int % 2);
+            dec_int /= 2;
+        }
+        while (value.length() < 4) {
+            value.insert(0, "0");
+        }
+        return value.toString();
+    }
+
+    public static int greatest_common_div(int a, int b) {
+        /*if (a == 0)
+            return new int[]{b, 1, 0};
+
+        int[] values = gcd(q, Constants.modulo(p, q));
+        int d = values[0];
+        int a = values[2];
+        int b = values[1] - (p / q) * values[2];
+        return new int[]{d, a, b}; */
+        return 0;
+    }
+
+    public static StringHelper hexToBin(StringHelper hex) {
         Logger.logEnter("MathUtils.hexToBin", hex);
         char[] hexChars = hex.toString().toCharArray();
         for (int i = 0; i < hexChars.length; i++) {
@@ -154,5 +218,26 @@ public class MathUtils {
             }
         }
         Logger.logExit("MathUtils.hexToBin", hex);
+        return hex;
+    }
+
+    public static int[] xorBytes(int[] byte1, int[] byte2) {
+        assert byte1.length == byte2.length;
+        int[] res = new int[byte1.length];
+        for (int i = 0; i < byte1.length; i++) {
+            res[i] = byte1[i] ^ byte2[i];
+        }
+        return res;
+    }
+
+    public static String transform(String hex) {
+        var helper = StringHelper.empty();
+        for (int i = 0; i < 8; i += 2) {
+            helper.append(hex.substring(i, i + 2));
+            helper.append(hex.substring(i + 8, i + 8 + 2));
+            helper.append(hex.substring(i + 16, i + 16 + 2));
+            helper.append(hex.substring(i + 24, i + 24 + 2));
+        }
+        return helper.toString();
     }
 }
